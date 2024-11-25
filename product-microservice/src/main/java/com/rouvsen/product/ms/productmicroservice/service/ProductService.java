@@ -3,18 +3,21 @@ package com.rouvsen.product.ms.productmicroservice.service;
 import com.rouvsen.product.ms.productmicroservice.model.ProductCreatedEvent;
 import com.rouvsen.product.ms.productmicroservice.model.ProductCreationDto;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductService {
 
     private final KafkaTemplate<String, ProductCreatedEvent> kafkaTemplate;
@@ -76,6 +79,8 @@ public class ProductService {
 
         String productId = UUID.randomUUID().toString();
 
+        log.info("Message will be sent to Kafka Topic!");
+
         // Remove CompletableFuture, just keep SendResult that is sync version and will wait for acknowledge, * Guaranteed!
         SendResult<String, ProductCreatedEvent> result =
                 kafkaTemplate.send(
@@ -83,6 +88,18 @@ public class ProductService {
                         productId,
                         toProductCreatedEvent(productId, creationDto)
                 ).get();
+
+        log.info("""
+                        Record metadata:
+                        Timestamp: [ {} ],
+                        Topic: [ {} ],
+                        Partition: [ {} ],
+                        Offset: [ {} ]
+                        """,
+                Instant.ofEpochMilli(result.getRecordMetadata().timestamp()),
+                result.getRecordMetadata().topic(),
+                result.getRecordMetadata().partition(),
+                result.getRecordMetadata().offset());
 
         log.info("Request and Response are completed!");
         return productId;

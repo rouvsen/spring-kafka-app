@@ -11,4 +11,19 @@ spring:
       bootstrap-servers: localhost:9092,localhost:9094,localhost:9096
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      properties:
+        delivery:
+          timeout:
+            ms: 120000 # 2min, it means waiting for: send request and retry times (both of them)
+        linger:
+          ms: 0 # how much time that will wait for batching, 0 means don't wait for message, don't batch
+        request:
+          timeout:
+            ms: 30000 # only waiting for send request time
+#      retries: 10
+#      properties:
+#        retry:
+#          backoff:
+#            ms: 1000
 
