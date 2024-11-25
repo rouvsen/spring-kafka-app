@@ -38,15 +38,24 @@ public class KafkaConfig {
     @Value("${spring.kafka.producer.properties.request.timeout.ms}")
     private String requestTimeout;
 
+    @Value("${spring.kafka.producer.properties.enable.idempotence}")
+    private String idempotence;
+
+    @Value("${spring.kafka.producer.properties.max.in.flight.requests.per.connection}")
+    private String maxInFlightRequestsPerConnection;
+
     Map<String, Object> producerConfigs() {
         Map<String, Object> configs = new HashMap<>();
         configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, keySerializer);
         configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer);
-        configs.put(ProducerConfig.ACKS_CONFIG, acks);
+        configs.put(ProducerConfig.ACKS_CONFIG, acks); //should be 'all' if you use idempotence
         configs.put(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG, deliveryTimeout);
         configs.put(ProducerConfig.LINGER_MS_CONFIG, linger);
         configs.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, requestTimeout);
+        configs.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, idempotence);
+        configs.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, maxInFlightRequestsPerConnection);
+//      configs.put(ProducerConfig.RETRIES_CONFIG, Integer.MAX_VALUE); //by default RETRIES equals Integer Max Val
         return configs;
     }
 

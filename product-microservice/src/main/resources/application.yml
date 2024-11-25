@@ -13,6 +13,16 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       acks: all
       properties:
+        enable:
+          idempotence: true
+        max:
+          in:
+            flight:
+              requests:
+                per:
+                  connection: 5 # can send 5 messages at the same time (means in the same kafka connection for request), will not wait for response, in the Exception time order can be different when retry to write message to the topic. For deepest consistency 1 is Ok.
+                  #Kafka documentation says: in-flight-requests-per-connection can not be greater than 5 ! if you try to write value that greater than 5, it'll throw configuration exception, Idempotence is activated! and cannot work with greater than 5 per connection!
+                  #to use idempotent producer, it must be at most 5 !
         delivery:
           timeout:
             ms: 120000 # 2min, it means waiting for: send request and retry times (both of them)
