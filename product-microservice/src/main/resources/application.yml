@@ -1,0 +1,14 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: product-microservice
+  profiles:
+    active: development
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092,localhost:9094,localhost:9096
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
