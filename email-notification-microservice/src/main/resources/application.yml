@@ -14,5 +14,4 @@ spring:
         spring:
           json:
             trusted:
-              packages: *
-
+              packages: com.rouvsen.emailnotification.ms.emailnotificationmicroservice.model

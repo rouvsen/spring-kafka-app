@@ -1,6 +1,5 @@
 package com.rouvsen.product.ms.productmicroservice.config;
 
-import com.rouvsen.product.ms.productmicroservice.model.ProductCreatedEvent;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,12 +59,12 @@ public class KafkaConfig {
     }
 
     @Bean
-    ProducerFactory<String, ProductCreatedEvent> producerFactory() {
+    ProducerFactory<String, String> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
-    KafkaTemplate<String, ProductCreatedEvent> kafkaTemplate() {
+    KafkaTemplate<String, String> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 

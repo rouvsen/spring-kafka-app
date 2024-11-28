@@ -1,9 +1,6 @@
 package com.rouvsen.emailnotification.ms.emailnotificationmicroservice.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
@@ -11,6 +8,7 @@ import java.math.BigDecimal;
 import static lombok.AccessLevel.PRIVATE;
 
 @Data
+//@ToString(exclude = {"productId", "title", "price"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
