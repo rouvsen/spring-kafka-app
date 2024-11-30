@@ -1,6 +1,13 @@
 server:
   port: 8083
 
+logging:
+  level:
+    org.springframework.kafka.transaction: TRACE #related to Kafka Transaction
+    org.springframework.transaction: TRACE #for all Transaction based classes in Spring @Application-Context
+    org.apache.kafka.clients.producer.internals.TransactionManager: TRACE #to look apache kafka internal transaction manager activity
+    org.springframework.kafka.transaction.KafkaTransactionManager: TRACE
+
 spring:
   application:
     name: product-microservice
@@ -8,6 +15,7 @@ spring:
     active: development
   kafka:
     producer:
+      transaction-id-prefix: product-service-${random.value}- #should be different for all pods on cluster! pods, it means consumers.
       bootstrap-servers: localhost:9092,localhost:9094,localhost:9096
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

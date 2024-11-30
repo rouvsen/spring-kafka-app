@@ -10,6 +10,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -79,6 +80,11 @@ public class ProductService {
         return productId;
     }
 
+    @Transactional(value = "kafkaTransactionManager",
+            rollbackFor = ClassNotFoundException.class,
+            noRollbackFor = AbstractMethodError.class)//for general: rollbackFor = Throwable.class
+    //you can not Override rollbacks, but you can add some transaction exception cases
+    //by default TransactionManager will roll back for Unchecked Exceptions and Errors, not for Checked!
     public String createProductSyncVersion2(ProductCreationDto creationDto) throws Exception {
         log.info("Main Thread: {}", Thread.currentThread().getName());
 
@@ -93,6 +99,18 @@ public class ProductService {
 //                        productId,
 //                        toProductCreatedEventJson(productId, creationDto)
 //                ).get();
+
+        // 'Local Transactions' in Spring Kafka!
+        kafkaTemplate.executeInTransaction(t -> { //Internal Kafka Transaction Context
+
+            t.send("withdraw-money-topic", "data-withdraw");
+
+            //any remote call
+
+            t.send("deposit-money-topic", "data-deposit");
+
+            return true;
+        });
 
         ProducerRecord<String, String> producerRecord = new ProducerRecord<>(
                 "product-created-events-topic",

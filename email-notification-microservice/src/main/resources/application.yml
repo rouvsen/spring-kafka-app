@@ -15,6 +15,7 @@ spring:
           json:
             trusted:
               packages: com.rouvsen.emailnotification.ms.emailnotificationmicroservice.model
+      isolation-level: read_committed
 
   datasource:
     username: rouvsen

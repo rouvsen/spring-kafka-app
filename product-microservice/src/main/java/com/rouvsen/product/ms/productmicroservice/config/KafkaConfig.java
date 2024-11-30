@@ -1,6 +1,7 @@
 package com.rouvsen.product.ms.productmicroservice.config;
 
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,7 @@ import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.transaction.KafkaTransactionManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,6 +45,9 @@ public class KafkaConfig {
     @Value("${spring.kafka.producer.properties.max.in.flight.requests.per.connection}")
     private String maxInFlightRequestsPerConnection;
 
+    @Value("${spring.kafka.producer.transaction-id-prefix}")
+    private String transactionalIfPrefix;
+
     Map<String, Object> producerConfigs() {
         Map<String, Object> configs = new HashMap<>();
         configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -55,6 +60,7 @@ public class KafkaConfig {
         configs.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, idempotence);
         configs.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, maxInFlightRequestsPerConnection);
 //      configs.put(ProducerConfig.RETRIES_CONFIG, Integer.MAX_VALUE); //by default RETRIES equals Integer Max Val
+        configs.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, transactionalIfPrefix);
         return configs;
     }
 
@@ -66,6 +72,11 @@ public class KafkaConfig {
     @Bean
     KafkaTemplate<String, String> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
+    }
+
+    @Bean
+    KafkaTransactionManager<String, String> kafkaTransactionManager() {
+        return new KafkaTransactionManager<>(producerFactory());
     }
 
     @Bean
