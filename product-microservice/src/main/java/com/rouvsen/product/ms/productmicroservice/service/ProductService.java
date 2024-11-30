@@ -6,14 +6,18 @@ import com.rouvsen.product.ms.productmicroservice.model.ProductCreationDto;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 @Service
@@ -83,12 +87,21 @@ public class ProductService {
         log.info("Message will be sent to Kafka Topic!");
 
         // Remove CompletableFuture, just keep SendResult that is sync version and will wait for acknowledge, * Guaranteed!
-        SendResult<String, String> result =
-                kafkaTemplate.send(
-                        "product-created-events-topic",
-                        productId,
-                        toProductCreatedEventJson(productId, creationDto)
-                ).get();
+//        SendResult<String, String> result =
+//                kafkaTemplate.send(
+//                        "product-created-events-topic",
+//                        productId,
+//                        toProductCreatedEventJson(productId, creationDto)
+//                ).get();
+
+        ProducerRecord<String, String> producerRecord = new ProducerRecord<>(
+                "product-created-events-topic",
+                productId,
+                toProductCreatedEventJson(productId, creationDto)
+        );
+        producerRecord.headers().add("messageId", UUID.randomUUID().toString().getBytes(UTF_8));
+
+        SendResult<String, String> result = kafkaTemplate.send(producerRecord).get();
 
         log.info("""
                         Record metadata:

@@ -15,3 +15,14 @@ spring:
           json:
             trusted:
               packages: com.rouvsen.emailnotification.ms.emailnotificationmicroservice.model
+
+  datasource:
+    username: rouvsen
+    password: rouvsen
+    url: jdbc:h2:mem:test_db
+    driver-class-name: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
