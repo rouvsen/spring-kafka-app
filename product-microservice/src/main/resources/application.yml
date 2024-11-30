@@ -6,7 +6,7 @@ logging:
     org.springframework.kafka.transaction: TRACE #related to Kafka Transaction
     org.springframework.transaction: TRACE #for all Transaction based classes in Spring @Application-Context
     org.apache.kafka.clients.producer.internals.TransactionManager: TRACE #to look apache kafka internal transaction manager activity & Kafka Internal activity
-    org.springframework.kafka.transaction.KafkaTransactionManager: TRACE # Kafka internal activity that integrated with Spring
+    org.springframework.kafka.transaction.KafkaTransactionManager: TRACE # Kafka with Spring activity
 
 spring:
   application:
