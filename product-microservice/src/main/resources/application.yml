@@ -3,10 +3,11 @@ server:
 
 logging:
   level:
-    org.springframework.kafka.transaction: TRACE #related to Kafka Transaction
-    org.springframework.transaction: TRACE #for all Transaction based classes in Spring @Application-Context
-    org.apache.kafka.clients.producer.internals.TransactionManager: TRACE #to look apache kafka internal transaction manager activity & Kafka Internal activity
-    org.springframework.kafka.transaction.KafkaTransactionManager: TRACE # Kafka with Spring activity
+    org.springframework.kafka.transaction: DEBUG #related to Kafka Transaction
+    org.springframework.transaction: DEBUG #for all Transaction based classes in Spring @Application-Context
+    org.apache.kafka.clients.producer.internals.TransactionManager: DEBUG #to look apache kafka internal transaction manager activity & Kafka Internal activity
+    org.springframework.kafka.transaction.KafkaTransactionManager: DEBUG # Kafka with Spring activity
+#    org.springframework.orm.jpa.JpaTransactionManager: DEBUG #data jpa should be within dependencies
 
 spring:
   application:

@@ -17,6 +17,8 @@ import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.kafka.transaction.KafkaTransactionManager;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.util.backoff.FixedBackOff;
 
 import java.util.HashMap;
@@ -73,6 +75,16 @@ public class KafkaConsumerConfig {
         configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 
         return new DefaultKafkaProducerFactory<>(configs);
+    }
+
+    @Bean("kafkaTransactionManager")
+    KafkaTransactionManager<String, Object> kafkaTransactionManager(ProducerFactory<String, Object> producerFactory) {
+        return new KafkaTransactionManager<>(producerFactory);
+    }
+
+    @Bean("transactionManager")
+    JpaTransactionManager jpaTransactionManager() {
+        return new JpaTransactionManager();
     }
 
 }
