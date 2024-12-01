@@ -8,6 +8,7 @@ import org.rocksdb.util.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
@@ -29,6 +30,9 @@ public class ProducerServiceIntegrationTest {
 
     @Mock
     private Environment environment;
+
+    @MockitoBean
+    private KafkaAdmin kafkaAdmin;
 
     @Test
     void testCreateProduct_whenGivenValidProductDetails_successfullySendsKafkaMessage() {
