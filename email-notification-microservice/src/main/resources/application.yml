@@ -16,6 +16,7 @@ spring:
             trusted:
               packages: com.rouvsen.emailnotification.ms.emailnotificationmicroservice.model
       isolation-level: read_committed
+      auto-offset-reset: earliest
 
   datasource:
     username: rouvsen
